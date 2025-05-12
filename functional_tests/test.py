@@ -111,6 +111,25 @@ class NewVisitorTest(LiveServerTestCase):
 
         #两人都很满意，然后去睡觉了
         
+    def test_layout_and_styling(self):
+    # 张三访问首页
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+        
+        # 先找到 inputbox 元素，再操作
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')  # 先赋值
+        inputbox.send_keys('testing')  # 再使用
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: testing')
+        
+        # 重新获取 inputbox（因为页面可能刷新）
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
+        
 
 # if __name__ == '__main__':
 #     unittest.main()
